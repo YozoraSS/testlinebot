@@ -138,7 +138,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					bot.SendText([]string{content.From}, "Left chatroom:\n"+N)
 					db.Exec("DELETE FROM database1234.chatroomuser WHERE MID = ?", content.From)
 					db.Exec("UPDATE database1234.linebotuser SET Status = ? WHERE MID = ?", "default", content.From)
-				}else{
+				}
+				else if text.Text == "!whoishandsome"{
 					var N string
 					db.QueryRow("SELECT roomnum FROM database1234.chatroomuser WHERE MID = ?", content.From).Scan(&N)
 					row,_ := db.Query("SELECT MID FROM database1234.chatroomuser WHERE roomnum = ?", N)
@@ -147,6 +148,18 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						row.Scan(&mid1)
 						if mid1 != content.From{
 							bot.SendText([]string{mid1}, info[0].DisplayName+":\n"+text.Text)
+						}
+					}
+				}
+				else{
+					var N string
+					db.QueryRow("SELECT roomnum FROM database1234.chatroomuser WHERE MID = ?", content.From).Scan(&N)
+					row,_ := db.Query("SELECT MID FROM database1234.chatroomuser WHERE roomnum = ?", N)
+					for row.Next() {
+						var mid1 string
+						row.Scan(&mid1)
+						if mid1 != content.From{
+							bot.SendText([]string{mid1}, "魔鏡"+":\n"+"彥佑最帥惹")
 						}
 					}
 				}
